@@ -2,8 +2,12 @@ import { Form, Link, NavLink, Outlet, useNavigation } from "react-router";
 import { getContacts } from "../data";
 import type { Route } from "./+types/sidebar";
 
-export async function loader() {
-  const contacts = await getContacts();
+// Because this is a GET, not a POST, React Router does not call the action function. 
+// Submitting a GET form is the same as clicking a link: only the URL changes.
+export async function loader({ request }: Route.LoaderArgs) {
+    const url = new URL(request.url);
+    const q = url.searchParams.get("q")
+  const contacts = await getContacts(q);
   return { contacts };
 }
 
