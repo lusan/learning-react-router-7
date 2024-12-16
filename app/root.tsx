@@ -12,18 +12,34 @@ import appStylesHref from "./app.css?url";
 
 import { getContacts } from "./data";
 
+
+export function HydrateFallback() {
+  return (
+    <div id="loading-splash">
+      <div id="loading-splash-spinner" />
+      <p>Loading, please wait...</p>
+    </div>
+  );
+}
+
 export async function clientLoader() {
   const contacts = await getContacts();
   return { contacts };
 }
 
-export default function App({ loaderData }) {
+/**
+ * Route.ComponentProps
+ * React Router generates types for each route in your app to provide automatic type safety.
+ */
+export default function App({ loaderData }: Route.ComponentProps) {
   const { contacts } = loaderData;
 
   return (
     <>
       <div id="sidebar">
-        <h1>React Router Contacts</h1>
+        <h1>
+          <Link to="about">React Router Contacts</Link>
+        </h1>
         <div>
           <Form id="search-form" role="search">
             <input
