@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
-import { Form, Link, NavLink, Outlet, useNavigation, useSubmit } from "react-router";
+import {
+  Form,
+  Link,
+  NavLink,
+  Outlet,
+  useNavigation,
+  useSubmit,
+} from "react-router";
 import { getContacts } from "../data";
 import type { Route } from "./+types/sidebar";
 
-// Because this is a GET, not a POST, React Router does not call the action function. 
+// Because this is a GET, not a POST, React Router does not call the action function.
 // Submitting a GET form is the same as clicking a link: only the URL changes.
 export async function loader({ request }: Route.LoaderArgs) {
-    const url = new URL(request.url);
-    const q = url.searchParams.get("q")
+  const url = new URL(request.url);
+  const q = url.searchParams.get("q");
   const contacts = await getContacts(q);
   return { contacts, q };
 }
@@ -21,18 +28,18 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   useEffect(() => {
     const searchField = document.getElementById("q");
     if (searchField instanceof HTMLInputElement) {
-        searchField.value = q || "";
+      searchField.value = q || "";
     }
   }, [q]);
 
-// Approach 2
-// the query now needs to be kept in state
-// we still have a `useEffect` to synchronize the query
+  // Approach 2
+  // the query now needs to be kept in state
+  // we still have a `useEffect` to synchronize the query
   // to the component state on back/forward button clicks
-// const [query, setQuery] = useState(q || "");
-// useEffect(() => {
-//     setQuery(q || "");
-// }, [q])
+  // const [query, setQuery] = useState(q || "");
+  // useEffect(() => {
+  //     setQuery(q || "");
+  // }, [q])
 
   return (
     <>
@@ -49,12 +56,12 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
               id="q"
               name="q"
               placeholder="Search"
-              onChange={event => submit(event.currentTarget)}
+              onChange={(event) => submit(event.currentTarget)}
               type="search"
               // Approach 2
-            //   onChange={(event) => {
-            //     setQuery(event.currentTarget.value)
-            //   }}
+              //   onChange={(event) => {
+              //     setQuery(event.currentTarget.value)
+              //   }}
               // Approach 2
               // value={query}
             />
@@ -69,13 +76,9 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
             <ul>
               {contacts.map((contact) => (
                 <li key={contact.id}>
-                  <NavLink 
-                    className={({ isActive, isPending }) => 
-                        isActive
-                        ? "active"
-                        : isPending
-                        ? "pending"
-                        : ""
+                  <NavLink
+                    className={({ isActive, isPending }) =>
+                      isActive ? "active" : isPending ? "pending" : ""
                     }
                     to={`contacts/${contact.id}`}
                   >
@@ -98,9 +101,10 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
           )}
         </nav>
       </div>
-      <div className={
-        navigation.state === "loading" ? "loading" : ""
-      } id="detail">
+      <div
+        className={navigation.state === "loading" ? "loading" : ""}
+        id="detail"
+      >
         <Outlet />
       </div>
     </>
