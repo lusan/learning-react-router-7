@@ -60,7 +60,12 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
               id="q"
               name="q"
               placeholder="Search"
-              onChange={(event) => submit(event.currentTarget)}
+              onChange={(event) => {
+                const isFirstSearch = q === null;
+                submit(event.currentTarget, {
+                    replace: !isFirstSearch
+                });
+              }}
               type="search"
               // Approach 2
               //   onChange={(event) => {
