@@ -1,4 +1,5 @@
-import { Form, Link, NavLink, Outlet, useNavigation } from "react-router";
+import { useState, useEffect } from "react";
+import { Form, Link, NavLink, Outlet, useNavigation, useSubmit } from "react-router";
 import { getContacts } from "../data";
 import type { Route } from "./+types/sidebar";
 
@@ -8,12 +9,30 @@ export async function loader({ request }: Route.LoaderArgs) {
     const url = new URL(request.url);
     const q = url.searchParams.get("q")
   const contacts = await getContacts(q);
-  return { contacts };
+  return { contacts, q };
 }
 
 export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
-  const { contacts } = loaderData;
+  const { contacts, q } = loaderData;
   const navigation = useNavigation();
+  const submit = useSubmit();
+
+  // Approach 1
+  useEffect(() => {
+    const searchField = document.getElementById("q");
+    if (searchField instanceof HTMLInputElement) {
+        searchField.value = q || "";
+    }
+  }, [q]);
+
+// Approach 2
+// the query now needs to be kept in state
+// we still have a `useEffect` to synchronize the query
+  // to the component state on back/forward button clicks
+// const [query, setQuery] = useState(q || "");
+// useEffect(() => {
+//     setQuery(q || "");
+// }, [q])
 
   return (
     <>
@@ -25,10 +44,19 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
           <Form id="search-form" role="search">
             <input
               aria-label="Search contacts"
+              // Approach 1
+              defaultValue={q || ""}
               id="q"
               name="q"
               placeholder="Search"
+              onChange={event => submit(event.currentTarget)}
               type="search"
+              // Approach 2
+            //   onChange={(event) => {
+            //     setQuery(event.currentTarget.value)
+            //   }}
+              // Approach 2
+              // value={query}
             />
             <div aria-hidden hidden={true} id="search-spinner" />
           </Form>
