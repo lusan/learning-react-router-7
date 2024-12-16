@@ -8,8 +8,6 @@ import type { Route } from "./+types/root";
 
 import appStylesHref from "./app.css?url";
 
-import { getContacts } from "./data";
-
 
 export function HydrateFallback() {
   return (
