@@ -48,7 +48,7 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
     <>
       <div id="sidebar">
         <h1>
-          <Link to="about">React Router Contacts</Link>
+          <Link to="about" viewTransition>React Router Contacts</Link>
         </h1>
         <div>
           <Form id="search-form" role="search">
